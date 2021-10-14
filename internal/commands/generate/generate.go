@@ -41,8 +41,17 @@ func Generate(job *cli.Cmd) {
 			verbosity.Error(err)
 			cli.Exit(1)
 		}
+		columns, err := rows.Columns()
+		if err != nil {
+			verbosity.Error(err)
+			cli.Exit(1)
+		}
+		out := ""
+		for _, column := range columns {
+			out += column + ","
+		}
 
-		verbosity.Info(rows.Columns())
+		verbosity.Info(out)
 
 	}
 }
