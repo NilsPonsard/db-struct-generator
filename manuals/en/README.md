@@ -1,4 +1,4 @@
-% go-starter user’s manual
+% db-struct-generator user’s manual
 
 ## Introduction
 

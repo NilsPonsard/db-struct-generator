@@ -5,9 +5,9 @@ import (
 	"path"
 
 	cli "github.com/jawher/mow.cli"
-	"github.com/nilsponsard/go-starter/internal/commands"
-	"github.com/nilsponsard/go-starter/pkg/files"
-	"github.com/nilsponsard/go-starter/pkg/verbosity"
+	"github.com/nilsponsard/db-struct-generator/internal/commands"
+	"github.com/nilsponsard/db-struct-generator/pkg/files"
+	"github.com/nilsponsard/db-struct-generator/pkg/verbosity"
 )
 
 // Version will be set by the script build.sh
@@ -15,10 +15,10 @@ var version string
 
 func main() {
 
-	app := cli.App("go-starter", "starter project")
+	app := cli.App("db-struct-generator", "starter project")
 	app.Version("v version", version)
 
-	defaultPath := files.ParsePath("~/.go-starter/")
+	defaultPath := files.ParsePath("~/.db-struct-generator/")
 
 	// arguments
 

@@ -1,4 +1,4 @@
-% Manuel d’utilisation de go-starter
+% Manuel d’utilisation de db-struct-generator
 
 ## Introduction
 

@@ -1,4 +1,4 @@
-module github.com/nilsponsard/go-starter
+module github.com/nilsponsard/db-struct-generator
 
 go 1.16
 

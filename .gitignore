@@ -4,4 +4,4 @@ go.sum
 log.log
 docs
 publish
-go-starter
+db-struct-generator
