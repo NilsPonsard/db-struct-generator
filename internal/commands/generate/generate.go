@@ -150,6 +150,7 @@ func Generate(job *cli.Cmd) {
 
 			out = `
 import (
+	"fmt"
 	"database/sql"
 )
 ` + out + `
