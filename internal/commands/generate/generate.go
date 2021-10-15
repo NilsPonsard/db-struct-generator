@@ -209,10 +209,10 @@ func arrayToString(arr []string) string {
 // output to file/term
 func output(content string, filePath *string) {
 
-	verbosity.Info(content)
-
 	if len(*filePath) > 0 {
 		os.WriteFile(*filePath, []byte(content), 0600)
+	} else {
+		verbosity.Info(content)
 	}
 
 }
