@@ -6,3 +6,4 @@ docs
 publish
 db-struct-generator
 package
+test.go

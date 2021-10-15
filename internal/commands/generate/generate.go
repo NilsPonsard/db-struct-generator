@@ -3,6 +3,7 @@ package generate
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -20,9 +21,10 @@ func Generate(job *cli.Cmd) {
 		port         = job.StringArg("PORT", "", "DB port")
 		table        = job.StringArg("TABLE", "", "DB table")
 		goName       = job.BoolOpt("g go-name", false, "Show only go compatible names")
-		originalName = job.BoolOpt("o original-name", false, "Show only db original name")
+		originalName = job.BoolOpt("n original-name", false, "Show only db original name")
 		jsonTag      = job.BoolOpt("j json-tag", false, "Add json tagging")
 		generateFunc = job.BoolOpt("f func", false, "Generate the function to retrieve data")
+		fileOutput   = job.StringOpt("o output", "", "set output file")
 	)
 
 	// function to execute
@@ -95,11 +97,12 @@ func Generate(job *cli.Cmd) {
 		// check options
 
 		if *goName {
-			verbosity.Info(arrayToString(goNames))
+			output(arrayToString(goNames), fileOutput)
 			cli.Exit(0)
 		}
 		if *originalName {
-			verbosity.Info(arrayToString(columns))
+			output(arrayToString(columns), fileOutput)
+
 			cli.Exit(0)
 		}
 
@@ -177,7 +180,7 @@ func Get` + tableName + `(dbConn *sql.DB) (result []` + tableName + `, err error
 
 		}
 
-		verbosity.Info(out)
+		output(out, fileOutput)
 	}
 }
 
@@ -193,4 +196,15 @@ func arrayToString(arr []string) string {
 		}
 	}
 	return out
+}
+
+// output to file/term
+func output(content string, filePath *string) {
+
+	verbosity.Info(content)
+
+	if len(*filePath) > 0 {
+		os.WriteFile(*filePath, []byte(content), 0600)
+	}
+
 }
