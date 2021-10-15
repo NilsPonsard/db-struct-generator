@@ -30,8 +30,12 @@ func Generate(job *cli.Cmd) {
 
 		verbosity.Debug(*user, *host, *port, *table)
 
+		// Ask for password so it’s not logged in password history
+
 		fmt.Printf("%s@%s:%s password : ", *user, *host, *port)
 		fmt.Scanln(&password)
+
+		// connect to DB
 
 		dbConn, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", *user, password, *host, *port, ""))
 
@@ -40,22 +44,32 @@ func Generate(job *cli.Cmd) {
 			cli.Exit(1)
 		}
 
+		// Get table
+
 		rows, err := dbConn.Query("SELECT * FROM " + *table)
 		if err != nil {
 			verbosity.Error(err)
 			cli.Exit(1)
 		}
+
+		// Get columns names
+
 		columns, err := rows.Columns()
 		if err != nil {
 			verbosity.Error(err)
 			cli.Exit(1)
 		}
 
+		// get columns types
+
 		types, err := rows.ColumnTypes()
 		if err != nil {
 			verbosity.Error(err)
 			cli.Exit(1)
 		}
+
+		// translate to go names (capitalise)
+
 		var (
 			goNames []string
 		)
@@ -73,6 +87,8 @@ func Generate(job *cli.Cmd) {
 
 		}
 
+		// check options
+
 		if *goName {
 			verbosity.Info(arrayToString(goNames))
 			cli.Exit(0)
@@ -82,9 +98,13 @@ func Generate(job *cli.Cmd) {
 			cli.Exit(0)
 		}
 
+		// output struct
+
 		out := "\nstruct {\n"
 
 		for i := range columns {
+
+			// translate type
 
 			t := types[i].ScanType().Name()
 
@@ -93,6 +113,8 @@ func Generate(job *cli.Cmd) {
 			} else if t == "RawBytes" {
 				t = "string"
 			}
+
+			// generate line
 
 			line := goNames[i] + " " + t
 
@@ -109,13 +131,10 @@ func Generate(job *cli.Cmd) {
 		out = out + "}"
 
 		verbosity.Info(out)
-
-		verbosity.Debug(goNames)
-		verbosity.Debug(types)
-		verbosity.Debug(originalName, jsonTag)
 	}
 }
 
+// print an array to go-like format
 func arrayToString(arr []string) string {
 	out := "["
 	for i, n := range arr {
