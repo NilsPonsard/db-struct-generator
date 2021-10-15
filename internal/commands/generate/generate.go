@@ -150,11 +150,11 @@ func Generate(job *cli.Cmd) {
 
 			scanVars := ""
 
-			for i, n := range columns {
+			for i, n := range goNames {
 
-				scanVars = scanVars + "&" + tableName + "." + n
+				scanVars = scanVars + "&row." + n
 
-				if i != len(columns)-1 {
+				if i != len(goNames)-1 {
 					scanVars = scanVars + ", "
 				}
 			}
