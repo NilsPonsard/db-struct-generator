@@ -124,7 +124,9 @@ func Generate(job *cli.Cmd) {
 
 			if strings.Contains(t, "int") {
 				t = "int"
-			} else if t == "RawBytes" {
+			} else if strings.Contains(t, "float") {
+				t = "float64"
+			} else {
 				t = "string"
 			}
 
@@ -175,7 +177,7 @@ func Get` + tableName + `(dbConn *sql.DB) (result []` + tableName + `, err error
 		err := rows.Scan(` + scanVars + `)
 			
 		if err == nil {
-			dnsDomains = append(dnsDomains, domain)
+			result = append(result, row)
 		} else {
 			fmt.Println(err)
 		}
