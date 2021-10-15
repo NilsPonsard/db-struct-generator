@@ -22,6 +22,7 @@ func Generate(job *cli.Cmd) {
 		goName       = job.BoolOpt("g go-name", false, "Show only go compatible names")
 		originalName = job.BoolOpt("o original-name", false, "Show only db original name")
 		jsonTag      = job.BoolOpt("j json-tag", false, "Add json tagging")
+		generateFunc = job.BoolOpt("f func", false, "Generate the function to retrieve data")
 	)
 
 	// function to execute
@@ -132,7 +133,48 @@ func Generate(job *cli.Cmd) {
 
 		}
 
-		out = out + "}"
+		out = out + "}\n"
+
+		if *generateFunc {
+
+			scanVars := ""
+
+			for i, n := range columns {
+
+				scanVars = scanVars + "&" + tableName + "." + n
+
+				if i != len(columns)-1 {
+					scanVars = scanVars + ", "
+				}
+			}
+
+			out = `
+import (
+	"database/sql"
+)
+` + out + `
+func Get` + tableName + `(dbConn *sql.DB) (result []` + tableName + `, err error) {
+	var row ` + tableName + `
+	rows, err := dbConn.Query("SELECT ` + arrayToString(columns) + ` FROM ` + *table + `")
+	if err != nil {
+		return result, err
+	}
+			
+	for rows.Next() {
+							
+		err := rows.Scan(` + scanVars + `)
+			
+		if err == nil {
+			dnsDomains = append(dnsDomains, domain)
+		} else {
+			fmt.Println(err)
+		}
+	}
+			
+	return result, nil
+}`
+
+		}
 
 		verbosity.Info(out)
 	}
@@ -140,7 +182,7 @@ func Generate(job *cli.Cmd) {
 
 // print an array to go-like format
 func arrayToString(arr []string) string {
-	out := "["
+	out := ""
 	for i, n := range arr {
 
 		out = out + n
@@ -149,6 +191,5 @@ func arrayToString(arr []string) string {
 			out = out + ","
 		}
 	}
-	out = out + "]"
 	return out
 }
