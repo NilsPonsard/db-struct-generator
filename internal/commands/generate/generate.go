@@ -28,6 +28,10 @@ func Generate(job *cli.Cmd) {
 
 	job.Action = func() {
 
+		elements := strings.Split(*table, ".")
+
+		tableName := elements[len(elements)-1]
+
 		verbosity.Debug(*user, *host, *port, *table)
 
 		// Ask for password so it’s not logged in password history
@@ -100,7 +104,7 @@ func Generate(job *cli.Cmd) {
 
 		// output struct
 
-		out := "\nstruct {\n"
+		out := "\ntype " + tableName + " struct {\n"
 
 		for i := range columns {
 

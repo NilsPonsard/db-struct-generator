@@ -1,11 +1,17 @@
 # db-struct-generator project
-You will need to change the url in `go.mod` and the names in `.env` and `Makefile` to match your project name & VCS hoster
+Generate structs from database.  
+This program connects to a database and retrieves the informations about a table to generate a go struct corresponding to the table.
+
+## usage
+```
+db-struct-generator generate <user> <host> <port> <table>
+```
 
 
 ## Dependencies
 - make 
 - go
-- pandoc for manual generation
+- pandoc for user manual generation
 
 ## make commands
 - `make all` : builds for Windows, linux generic and Ubuntu/debian (deb), builds the manuals and put everything in the `publish` folder
