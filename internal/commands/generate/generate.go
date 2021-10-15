@@ -25,6 +25,7 @@ func Generate(job *cli.Cmd) {
 		jsonTag      = job.BoolOpt("j json-tag", false, "Add json tagging")
 		generateFunc = job.BoolOpt("f func", false, "Generate the function to retrieve data")
 		fileOutput   = job.StringOpt("o output", "", "set output file")
+		passwordOpt  = job.StringOpt("p password", "", "Use this password and don’t ask for it")
 	)
 
 	// function to execute
@@ -37,10 +38,15 @@ func Generate(job *cli.Cmd) {
 
 		verbosity.Debug(*user, *host, *port, *table)
 
-		// Ask for password so it’s not logged in password history
+		if len(*passwordOpt) > 0 {
+			password = *passwordOpt
+		} else {
 
-		fmt.Printf("%s@%s:%s password : ", *user, *host, *port)
-		fmt.Scanln(&password)
+			// Ask for password
+
+			fmt.Printf("%s@%s:%s password : ", *user, *host, *port)
+			fmt.Scanln(&password)
+		}
 
 		// connect to DB
 
