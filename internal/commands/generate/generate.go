@@ -90,12 +90,11 @@ func Generate(job *cli.Cmd) {
 
 			if len(column) > 1 {
 
-				w := strings.ToUpper(string(column[0])) + column[1:]
-
+				w := strings.ReplaceAll(strings.ToUpper(string(column[0]))+column[1:], "-", "")
 				goNames = append(goNames, w)
 			} else {
 
-				goNames = append(goNames, strings.ToUpper(column))
+				goNames = append(goNames, strings.ReplaceAll(strings.ToUpper(column), "-", ""))
 			}
 
 		}
